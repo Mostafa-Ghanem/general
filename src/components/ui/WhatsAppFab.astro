@@ -1,0 +1,31 @@
+---
+// src/components/ui/WhatsAppFab.astro
+import { getLangFromUrl } from '../../i18n/utils';
+const lang = getLangFromUrl(Astro.url);
+---
+<a
+  href="https://wa.me/201016265762"
+  target="_blank"
+  rel="noopener"
+  aria-label="WhatsApp"
+  class="wa-fab wa-pulse"
+>
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path d="M20.5 12a8.5 8.5 0 0 1-12.7 7.4L3.5 21l1.6-4.2A8.5 8.5 0 1 1 20.5 12z"/>
+    <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.5-1.5-2-1-1 1c-1 0-2-1-2-2l1-1-1-2L9.5 8c-.3 0-.5.7-.5 1.5z" fill="currentColor" stroke="none"/>
+  </svg>
+</a>
+
+<style define:vars={{ side: lang === 'ar' ? 'left' : 'right' }}>
+  .wa-fab {
+    position: fixed; bottom: 28px;
+    inset-inline-end: 28px;
+    z-index: 40;
+    background: #25D366;
+    color: white;
+    width: 60px; height: 60px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    box-shadow: 0 8px 24px -8px rgba(37,211,102,0.6);
+  }
+</style>

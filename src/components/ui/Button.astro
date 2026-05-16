@@ -1,0 +1,22 @@
+---
+// src/components/ui/Button.astro — variant button as either <a> or <button>.
+interface Props {
+  variant?: 'primary' | 'outline-light' | 'outline-dark' | 'ghost';
+  href?: string;
+  type?: 'button' | 'submit';
+  class?: string;
+  target?: string;
+  rel?: string;
+}
+const { variant = 'primary', href, type = 'button', class: className = '', target, rel } = Astro.props;
+const cls = `btn btn-${variant} ${className}`;
+---
+{href ? (
+  <a href={href} class={cls} target={target} rel={rel}>
+    <slot />
+  </a>
+) : (
+  <button type={type} class={cls}>
+    <slot />
+  </button>
+)}

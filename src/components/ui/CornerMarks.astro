@@ -1,0 +1,19 @@
+---
+// src/components/ui/CornerMarks.astro — registration-mark corner decoration
+interface Props {
+  color?: string;
+}
+const { color = 'rgba(255,255,255,0.18)' } = Astro.props;
+---
+<span class="cm tl" style={`--c: ${color}`}></span>
+<span class="cm tr" style={`--c: ${color}`}></span>
+<span class="cm bl" style={`--c: ${color}`}></span>
+<span class="cm br" style={`--c: ${color}`}></span>
+
+<style>
+  .cm { position: absolute; width: 24px; height: 24px; pointer-events: none; }
+  .cm.tl { top: 16px; left: 16px; border-top: 1px solid var(--c); border-left: 1px solid var(--c); }
+  .cm.tr { top: 16px; right: 16px; border-top: 1px solid var(--c); border-right: 1px solid var(--c); }
+  .cm.bl { bottom: 16px; left: 16px; border-bottom: 1px solid var(--c); border-left: 1px solid var(--c); }
+  .cm.br { bottom: 16px; right: 16px; border-bottom: 1px solid var(--c); border-right: 1px solid var(--c); }
+</style>

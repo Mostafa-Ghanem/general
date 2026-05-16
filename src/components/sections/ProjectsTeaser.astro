@@ -1,0 +1,55 @@
+---
+// src/components/sections/ProjectsTeaser.astro
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '../../i18n/utils';
+import { getCollection } from 'astro:content';
+import SectionLabel from '../ui/SectionLabel.astro';
+import ProjectCard from '../ui/ProjectCard.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const all = await getCollection('projects', ({ data }) => data.lang === lang);
+const items = all
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
+  .slice(0, 3);
+---
+<section class="teaser-section">
+  <div class="container-grid">
+    <div class="teaser-head">
+      <div>
+        <SectionLabel coord={lang === 'ar' ? '٠٤ — مشروعات' : '04 — PROJECTS'} eyebrow={t('projects.eyebrow')} />
+        <h2 class="display-md teaser-title">{t('projects.title')}</h2>
+      </div>
+      <a href={getLocalizedPath('projects', lang)} class="btn btn-outline-dark">
+        {t('projects.seeAll')}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          {lang === 'ar' ? <><line x1="4" y1="12" x2="20" y2="12"/><polyline points="10 6 4 12 10 18"/></> : <><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></>}
+        </svg>
+      </a>
+    </div>
+
+    <div class="teaser-grid">
+      {items.map((p, i) => (
+        <ProjectCard
+          title={p.data.title}
+          summary={p.data.summary}
+          sector={p.data.sector}
+          year={p.data.year}
+          index={i}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .teaser-section { background: white; padding: 120px 0; }
+  .teaser-head {
+    display: flex; justify-content: space-between; align-items: end;
+    margin-bottom: 56px; gap: 32px; flex-wrap: wrap;
+  }
+  .teaser-title { margin: 0; white-space: pre-line; text-wrap: balance; }
+  .teaser-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 960px) { .teaser-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .teaser-grid { grid-template-columns: 1fr; } }
+</style>

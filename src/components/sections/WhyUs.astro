@@ -1,0 +1,69 @@
+---
+// src/components/sections/WhyUs.astro
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { whyPoints } from '../../i18n/ui';
+import SectionLabel from '../ui/SectionLabel.astro';
+import CornerMarks from '../ui/CornerMarks.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const points = whyPoints[lang];
+---
+<section class="why-section">
+  <div class="container-grid">
+    <div class="why-grid">
+      <div>
+        <SectionLabel coord={lang === 'ar' ? '٠٣ — لماذا نحن' : '03 — WHY US'} eyebrow={t('why.eyebrow')} />
+        <h2 class="display-md why-title">{t('why.title')}</h2>
+        <div class="why-image tech-dots">
+          <CornerMarks color="var(--amber)" />
+          <span class="mono why-image-label">
+            {lang === 'ar' ? 'مخزن العاشر من رمضان' : 'WAREHOUSE — 10TH OF RAMADAN'}
+          </span>
+          <span class="mono why-image-size">14,000 M²</span>
+        </div>
+      </div>
+      <div>
+        {points.map((pt, i) => (
+          <article class:list={['why-point', i === points.length - 1 && 'is-last']}>
+            <span class="mono why-num">{pt.n}</span>
+            <div>
+              <h3 class="why-pt-title">{pt.t}</h3>
+              <p class="why-pt-desc">{pt.d}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why-section { background: var(--gray-light); padding: 120px 0; position: relative; }
+  .why-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 80px; align-items: start; }
+  .why-title { margin: 0; white-space: pre-line; text-wrap: balance; }
+  .why-image {
+    margin-top: 40px; height: 280px; background: var(--navy);
+    position: relative; overflow: hidden;
+  }
+  .why-image-label {
+    position: absolute; bottom: 16px; inset-inline-start: 16px;
+    font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.14em;
+  }
+  .why-image-size {
+    position: absolute; top: 16px; inset-inline-end: 16px;
+    font-size: 10px; color: var(--amber); letter-spacing: 0.14em;
+  }
+  .why-point {
+    display: grid; grid-template-columns: 80px 1fr; gap: 32px;
+    padding: 32px 0; border-top: 1px solid var(--gray-line);
+  }
+  .why-point.is-last { border-bottom: 1px solid var(--gray-line); }
+  .why-num { font-size: 14px; color: var(--amber); font-weight: 500; letter-spacing: 0.08em; padding-top: 6px; }
+  .why-pt-title { margin: 0; font-size: 22px; font-weight: 600; color: var(--charcoal); }
+  .why-pt-desc { margin: 12px 0 0; font-size: 16px; line-height: 1.6; color: var(--gray-medium); max-width: 540px; }
+  @media (max-width: 960px) {
+    .why-grid { grid-template-columns: 1fr; gap: 56px; }
+    .why-point { grid-template-columns: 60px 1fr; gap: 16px; }
+  }
+</style>

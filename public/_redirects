@@ -1,0 +1,21 @@
+# Cloudflare Pages — redirects
+# Force trailing slashes to match existing SEO structure
+# (Astro is set with trailingSlash: 'always', but redirect any stragglers)
+
+# Old WordPress patterns → new equivalents (extend as needed)
+/wp-admin/*                                 /                                                             301
+/wp-login.php                               /                                                             301
+/index.php                                  /                                                             301
+/category/*                                 /services/                                                    301
+
+# Common AR aliases used in WordPress permalinks (preserve hand-shared links)
+/contact                                    /contact/                                                     301
+/contact-us                                 /contact/                                                     301
+/products                                   /services/                                                    301
+/products/                                  /services/                                                    301
+/about-us                                   /about/                                                       301
+/about-us/                                  /about/                                                       301
+
+# AR Arabic-slug shortcuts (without /ar/ prefix) for legacy links
+/من-نحن                                     /ar/من-نحن/                                                   301
+/تواصل-معانا                                /ar/تواصل-معانا/                                              301

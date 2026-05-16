@@ -1,0 +1,133 @@
+---
+// src/layouts/BaseLayout.astro — HTML shell, SEO, hreflang, RTL/LTR
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import WhatsAppFab from '../components/ui/WhatsAppFab.astro';
+import { getLangFromUrl, useTranslations, buildHrefLangAlternates } from '../i18n/utils';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description, ogImage = '/images/og-default.jpg', noindex = false } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const dir = ui[lang]['site.dir'];
+
+const company = t('site.company');
+const fullTitle = title ? `${title} — ${company}` : company + ' — ' + t('site.tagline');
+const desc = description ?? t('site.tagline');
+
+const siteOrigin = Astro.site?.toString() ?? 'https://generalea.com';
+const canonical = new URL(Astro.url.pathname, siteOrigin).toString();
+const alternates = buildHrefLangAlternates(Astro.url, siteOrigin);
+
+// LocalBusiness JSON-LD
+const ldJson = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://generalea.com/#org',
+  name: company,
+  alternateName: lang === 'ar' ? 'General Factory Equipment Co.' : 'العامة لمهمات المصانع',
+  description: desc,
+  url: 'https://generalea.com',
+  telephone: '+201016265762',
+  email: 'sales@generalea.com',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Industrial Zone A4, Street 6',
+    addressLocality: '10th of Ramadan',
+    addressRegion: 'Sharqia',
+    addressCountry: 'EG',
+  },
+  openingHours: 'Sa-Th 09:00-18:00',
+  sameAs: [],
+};
+
+const GTM_ID = 'GTM-57Q5JH8';
+---
+<!doctype html>
+<html lang={lang} dir={dir}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    {/* hreflang alternates */}
+    {alternates.map(alt => (
+      <link rel="alternate" hreflang={alt.lang} href={alt.href} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={siteOrigin} />
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'ar' ? 'ar_EG' : 'en_EG'} />
+    <meta property="og:image" content={new URL(ogImage, siteOrigin).toString()} />
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={desc} />
+    <meta name="twitter:image" content={new URL(ogImage, siteOrigin).toString()} />
+
+    {/* Fonts */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    {/* Favicons */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/* JSON-LD */}
+    <script type="application/ld+json" set:html={JSON.stringify(ldJson)} />
+
+    {/* GTM */}
+    <script is:inline define:vars={{ GTM_ID }}>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', GTM_ID);
+    </script>
+  </head>
+
+  <body>
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe>
+    </noscript>
+
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppFab />
+  </body>
+</html>

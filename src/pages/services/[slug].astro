@@ -1,0 +1,252 @@
+---
+// src/pages/services/[slug].astro — dynamic English product pages
+import { getStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionLabel from '../../components/ui/SectionLabel.astro';
+import CornerMarks from '../../components/ui/CornerMarks.astro';
+import ProductCard from '../../components/ui/ProductCard.astro';
+import ProductIcon from '../../components/ui/ProductIcon.astro';
+import { getLangFromUrl, useTranslations, getLocalizedPath, WHATSAPP_URL } from '../../i18n/utils';
+import { productSlugs, productInfo, type ProductSlug } from '../../i18n/ui';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  return productSlugs.map(slug => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params as { slug: ProductSlug };
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const info = productInfo[slug][lang];
+const idx = productSlugs.indexOf(slug);
+
+// Try to load content collection for richer specs
+const entries = await getCollection('products', ({ data }) => data.slug === slug && data.lang === lang);
+const entry = entries[0];
+
+const sizes        = entry?.data.sizes        ?? ['½″','¾″','1″','1½″','2″','3″','4″','6″','8″','10″','12″','14″','16″','18″','20″','24″'];
+const materials    = entry?.data.materials    ?? (lang === 'ar'
+  ? ['كربون صلب — A105','صلب سبائكي — A182 F11/F22','ستانلس — A182 F304/F316','دكتايل — A395']
+  : ['Carbon steel — A105','Alloy steel — A182 F11/F22','Stainless — A182 F304/F316','Ductile — A395']);
+const standards    = entry?.data.standards    ?? ['ASTM B16.5','ASTM B16.47','DIN 2632/2633','BS 4504','ANSI 150# — 2500#'];
+const applications = entry?.data.applications ?? (lang === 'ar'
+  ? ['البتروكيماويات','الإسمنت ومواد البناء','محطات الطاقة','محطات المياه','الصناعات الغذائية']
+  : ['Petrochemicals','Cement & building materials','Power plants','Water utilities','Food processing']);
+
+const seoTitle = entry?.data.seo?.title ?? info.name;
+const seoDesc  = entry?.data.seo?.description ?? info.desc;
+
+const related = productSlugs.filter(s => s !== slug).slice(0, 3);
+---
+<BaseLayout title={seoTitle} description={seoDesc}>
+  {/* Breadcrumb */}
+  <div class="crumb">
+    <div class="container-grid crumb-row">
+      <a href={getLocalizedPath('home', lang)} class="mono crumb-link">{t('nav.home')}</a>
+      <span class="crumb-sep">/</span>
+      <a href={getLocalizedPath('services', lang)} class="mono crumb-link">{t('nav.products')}</a>
+      <span class="crumb-sep">/</span>
+      <span class="mono crumb-cur">{info.name}</span>
+    </div>
+  </div>
+
+  {/* Product hero */}
+  <section class="product-hero">
+    <div class="container-grid">
+      <div class="ph-grid">
+        <div>
+          <SectionLabel
+            coord={`${String(idx + 1).padStart(2, '0')} / 09 — ${lang === 'ar' ? 'منتج' : 'PRODUCT'}`}
+            eyebrow={lang === 'ar' ? 'منتج معتمد' : 'Certified product'}
+          />
+          <h1 class="display-lg ph-name">{info.name}</h1>
+          <p class="ph-desc">{info.desc}</p>
+
+          <div class="ph-actions">
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener" class="btn btn-primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.5 12a8.5 8.5 0 0 1-12.7 7.4L3.5 21l1.6-4.2A8.5 8.5 0 1 1 20.5 12z"/></svg>
+              {t('product.quoteCta')}
+            </a>
+            <button class="btn btn-outline-dark">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="3" x2="12" y2="15"/><polyline points="6 11 12 17 18 11"/><line x1="4" y1="21" x2="20" y2="21"/></svg>
+              {t('product.datasheet')}
+            </button>
+          </div>
+
+          <div class="ph-stats">
+            <div class="stat-cell">
+              <span class="mono stat-l">{lang === 'ar' ? 'القطر' : 'Diameter'}</span>
+              <span class="mono stat-v">½″–24″</span>
+            </div>
+            <div class="stat-cell">
+              <span class="mono stat-l">{lang === 'ar' ? 'الضغط' : 'Pressure'}</span>
+              <span class="mono stat-v">150–2500#</span>
+            </div>
+            <div class="stat-cell">
+              <span class="mono stat-l">{lang === 'ar' ? 'المواد' : 'Materials'}</span>
+              <span class="mono stat-v">{lang === 'ar' ? '٤ نوع' : '4 grades'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ph-visual">
+          <CornerMarks color="var(--amber)" />
+          <div class="ph-visual-icon">
+            <ProductIcon slug={slug} size={160} />
+          </div>
+          <span class="mono ph-visual-tl">DWG · {String(idx + 1).padStart(3, '0')}</span>
+          <span class="mono ph-visual-bl">{info.name.toUpperCase()} · TYPE A</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Specs */}
+  <section class="specs-section">
+    <div class="container-grid">
+      <SectionLabel coord={lang === 'ar' ? '— المواصفات' : '— SPECIFICATIONS'} eyebrow={lang === 'ar' ? 'كل ما يحتاجه المهندس' : 'What the engineer needs'} />
+      <h2 class="display-md">{lang === 'ar' ? `مواصفات ${info.name}` : `${info.name} specifications`}</h2>
+
+      <div class="specs-grid">
+        <div class="spec-block">
+          <h4 class="mono spec-title">{t('product.sizes')}</h4>
+          <div class="chip-list">
+            {sizes.map((s: string) => <span class="mono chip">{s}</span>)}
+          </div>
+        </div>
+        <div class="spec-block">
+          <h4 class="mono spec-title">{t('product.materials')}</h4>
+          <ul class="check-list">
+            {materials.map((m: string) => (
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 12 10 18 20 6"/></svg>
+                <span>{m}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="spec-block">
+          <h4 class="mono spec-title">{t('product.standards')}</h4>
+          <ul class="check-list">
+            {standards.map((s: string) => (
+              <li class="mono">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 12 10 18 20 6"/></svg>
+                <span>{s}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="spec-block">
+          <h4 class="mono spec-title">{t('product.applications')}</h4>
+          <ul class="check-list">
+            {applications.map((a: string) => (
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="4 12 10 18 20 6"/></svg>
+                <span>{a}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Related */}
+  <section class="related-section">
+    <div class="container-grid">
+      <div class="rel-head">
+        <div>
+          <SectionLabel coord={lang === 'ar' ? '— ذو صلة' : '— RELATED'} eyebrow={lang === 'ar' ? 'استكمل النظام' : 'Complete the system'} />
+          <h2 class="display-sm">{t('product.related')}</h2>
+        </div>
+        <a href={getLocalizedPath('services', lang)} class="btn btn-outline-dark">
+          {t('cta.backToProducts')}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            {lang === 'ar' ? <><line x1="4" y1="12" x2="20" y2="12"/><polyline points="10 6 4 12 10 18"/></> : <><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></>}
+          </svg>
+        </a>
+      </div>
+      <div class="rel-grid">
+        {related.map(s => <ProductCard slug={s} index={productSlugs.indexOf(s)} />)}
+      </div>
+    </div>
+  </section>
+
+  {/* JSON-LD Product schema */}
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: info.name,
+    description: info.desc,
+    brand: { '@type': 'Brand', name: 'General Factory Equipment' },
+    category: 'Industrial Equipment',
+    offers: {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      priceCurrency: 'EGP',
+      url: new URL(Astro.url.pathname, Astro.site).toString(),
+    },
+  })} />
+</BaseLayout>
+
+<style>
+  .crumb { background: var(--gray-light); border-bottom: 1px solid var(--gray-line); }
+  .crumb-row { padding: 20px 32px; display: flex; align-items: center; gap: 12px; }
+  .crumb-link { font-size: 12px; color: var(--gray-medium); letter-spacing: 0.08em; text-transform: uppercase; }
+  .crumb-sep { color: var(--gray-soft); }
+  .crumb-cur { font-size: 12px; color: var(--navy); letter-spacing: 0.08em; font-weight: 500; }
+
+  .product-hero { background: white; padding: 80px 0; }
+  .ph-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: start; }
+  .ph-name { margin: 0; }
+  .ph-desc { margin-top: 28px; font-size: 19px; line-height: 1.55; color: var(--gray-medium); max-width: 560px; }
+  .ph-actions { margin-top: 40px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .ph-stats {
+    margin-top: 56px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border-top: 1px solid var(--gray-line); border-bottom: 1px solid var(--gray-line);
+  }
+  .stat-cell { padding: 24px 20px; border-inline-start: 1px solid var(--gray-line); }
+  .stat-cell:first-child { border-inline-start: none; }
+  .stat-l { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-medium); display: block; }
+  .stat-v { margin-top: 8px; font-size: 22px; font-weight: 500; color: var(--navy); display: block; }
+
+  .ph-visual {
+    position: sticky; top: 120px; aspect-ratio: 4/5;
+    background: var(--gray-light); border: 1px solid var(--gray-line);
+    position: relative;
+  }
+  .ph-visual-icon { display: grid; place-items: center; height: 100%; color: var(--navy); }
+  .ph-visual-tl { position: absolute; top: 16px; inset-inline-end: 16px; font-size: 10px; letter-spacing: 0.14em; color: var(--gray-medium); text-transform: uppercase; }
+  .ph-visual-bl { position: absolute; bottom: 16px; inset-inline-start: 16px; font-size: 10px; letter-spacing: 0.14em; color: var(--gray-medium); text-transform: uppercase; }
+
+  .specs-section { background: var(--gray-light); padding: 100px 0; }
+  .specs-grid {
+    margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    background: white; border: 1px solid var(--gray-line);
+  }
+  .spec-block { padding: 32px; border-top: 1px solid var(--gray-line); border-inline-start: 1px solid var(--gray-line); min-height: 200px; }
+  .spec-title { margin: 0 0 24px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-medium); font-weight: 500; }
+  .chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 6px 10px; border: 1px solid var(--gray-line); font-size: 12px; color: var(--navy); }
+  .check-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .check-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--charcoal); line-height: 1.5; }
+  .check-list li.mono span { font-size: 13px; }
+  .check-list svg { color: var(--amber); flex-shrink: 0; margin-top: 3px; }
+
+  .related-section { background: white; padding: 100px 0; }
+  .rel-head { display: flex; justify-content: space-between; align-items: end; margin-bottom: 48px; flex-wrap: wrap; gap: 24px; }
+  .rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--gray-line); }
+  .rel-grid :global(.product-card) { border: none; }
+  .rel-grid :global(.product-card) + :global(.product-card) { border-inline-start: 1px solid var(--gray-line); }
+
+  @media (max-width: 960px) {
+    .ph-grid { grid-template-columns: 1fr; gap: 56px; }
+    .ph-visual { position: static; max-width: 480px; margin: 0 auto; }
+  }
+  @media (max-width: 800px) {
+    .specs-grid { grid-template-columns: 1fr; }
+    .rel-grid { grid-template-columns: 1fr; }
+    .rel-grid :global(.product-card) + :global(.product-card) { border-inline-start: none; border-top: 1px solid var(--gray-line); }
+  }
+</style>

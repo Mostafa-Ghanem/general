@@ -1,0 +1,25 @@
+---
+// src/components/ui/SectionLabel.astro
+interface Props {
+  coord: string;
+  eyebrow: string;
+  dark?: boolean;
+}
+const { coord, eyebrow, dark = false } = Astro.props;
+---
+<div class="section-label">
+  <span class={`mono coord ${dark ? 'dark' : ''}`}>{coord}</span>
+  <span class={`bar ${dark ? 'dark' : ''}`}></span>
+  <span class="eyebrow">{eyebrow}</span>
+</div>
+
+<style>
+  .section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .coord {
+    font-size: 11px; letter-spacing: 0.16em; font-weight: 500;
+    text-transform: uppercase; color: var(--gray-medium);
+  }
+  .coord.dark { color: rgba(255,255,255,0.6); }
+  .bar { height: 1px; width: 32px; background: var(--gray-line); }
+  .bar.dark { background: rgba(255,255,255,0.18); }
+</style>

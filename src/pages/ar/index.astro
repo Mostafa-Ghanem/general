@@ -1,0 +1,19 @@
+---
+// src/pages/ar/index.astro — Arabic homepage
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/sections/Hero.astro';
+import ProductGrid from '../../components/sections/ProductGrid.astro';
+import WhyUs from '../../components/sections/WhyUs.astro';
+import ProjectsTeaser from '../../components/sections/ProjectsTeaser.astro';
+import ContactCTA from '../../components/sections/ContactCTA.astro';
+---
+<BaseLayout
+  title="مورد صناعي — فلانشات، مواسير، محابس"
+  description="مورد المصانع المصرية الموثوق منذ ١٩٩٨. فلانشات، مواسير، وصلات هيدروليك، محابس، وجوانات متوفرة في المخزن."
+>
+  <Hero />
+  <ProductGrid />
+  <WhyUs />
+  <ProjectsTeaser />
+  <ContactCTA />
+</BaseLayout>

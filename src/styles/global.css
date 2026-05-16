@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --navy: #1A2B4A;
+    --navy-deep: #0F1B30;
+    --navy-soft: #243757;
+    --amber: #F5A623;
+    --amber-deep: #D88A0A;
+    --charcoal: #2C3E50;
+    --gray-light: #F4F6F8;
+    --gray-line: #E5E8ED;
+    --gray-medium: #6B7280;
+    --gray-soft: #9AA3AE;
+    --white: #FFFFFF;
+  }
+
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body { background: #fff; color: var(--charcoal); font-family: 'IBM Plex Sans Arabic','IBM Plex Sans',system-ui,sans-serif; margin: 0; }
+  html[lang="en"] body { font-family: 'IBM Plex Sans','IBM Plex Sans Arabic',system-ui,sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+  img { display: block; max-width: 100%; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--gray-soft); border-radius: 4px; }
+  ::-webkit-scrollbar-track { background: var(--gray-light); }
+}
+
+@layer components {
+  .container-grid { max-width: 1280px; margin: 0 auto; padding-left: 32px; padding-right: 32px; }
+  @media (max-width: 640px) { .container-grid { padding-left: 20px; padding-right: 20px; } }
+
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  .latin { font-family: 'IBM Plex Sans', sans-serif; }
+
+  .tech-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .tech-dots {
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .display-xl { font-size: clamp(40px, 6vw, 88px); line-height: 1.02; letter-spacing: -0.02em; font-weight: 600; }
+  .display-lg { font-size: clamp(32px, 4.5vw, 64px); line-height: 1.05; letter-spacing: -0.015em; font-weight: 600; }
+  .display-md { font-size: clamp(28px, 3.5vw, 44px); line-height: 1.1; letter-spacing: -0.01em; font-weight: 600; }
+  .display-sm { font-size: clamp(22px, 2.4vw, 28px); line-height: 1.2; font-weight: 600; }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--amber); font-weight: 500;
+  }
+  .eyebrow-muted { color: var(--gray-medium); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 24px; font-size: 14px; font-weight: 500;
+    letter-spacing: 0.01em; border: 1px solid transparent;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+    border-radius: 2px; line-height: 1; cursor: pointer;
+  }
+  .btn-primary { background: var(--amber); color: var(--navy-deep); }
+  .btn-primary:hover { background: var(--amber-deep); }
+  .btn-outline-light { background: transparent; color: white; border-color: rgba(255,255,255,0.3); }
+  .btn-outline-light:hover { border-color: var(--amber); color: var(--amber); }
+  .btn-outline-dark { background: transparent; color: var(--navy); border-color: var(--gray-line); }
+  .btn-outline-dark:hover { border-color: var(--navy); }
+  .btn-ghost { background: transparent; color: var(--navy); padding: 10px 0; }
+
+  .placeholder-img {
+    background-color: var(--gray-light);
+    background-image: repeating-linear-gradient(45deg, transparent 0, transparent 16px, rgba(26,43,74,0.04) 16px, rgba(26,43,74,0.04) 17px);
+    position: relative; overflow: hidden;
+  }
+  .placeholder-img > .ph-label {
+    position: absolute; bottom: 12px;
+    inset-inline-start: 12px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; color: var(--navy); opacity: 0.5; text-transform: uppercase;
+  }
+
+  .nav-link {
+    position: relative; padding: 8px 0;
+    font-size: 14px; font-weight: 500;
+    color: rgba(255,255,255,0.85); transition: color 0.18s;
+  }
+  .nav-link:hover, .nav-link.active { color: white; }
+  .nav-link.active::after {
+    content: ''; position: absolute;
+    left: 0; right: 0; bottom: -2px; height: 2px; background: var(--amber);
+  }
+
+  .card-hover { transition: border-color 0.2s, transform 0.25s, box-shadow 0.25s; }
+  .card-hover:hover { border-color: var(--navy); transform: translateY(-2px); box-shadow: 0 12px 32px -16px rgba(26,43,74,0.18); }
+
+  @keyframes wapulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45); }
+    100% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); }
+  }
+  .wa-pulse { animation: wapulse 2.4s infinite; }
+}

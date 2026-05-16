@@ -1,0 +1,63 @@
+---
+// src/components/ui/ProductCard.astro
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '../../i18n/utils';
+import { productInfo, type ProductSlug } from '../../i18n/ui';
+import ProductIcon from './ProductIcon.astro';
+
+interface Props {
+  slug: ProductSlug;
+  index: number;
+}
+const { slug, index } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const info = productInfo[slug][lang];
+const href = getLocalizedPath('services', lang, slug);
+---
+<a href={href} class="product-card card-hover">
+  <span class="mono pc-index">{String(index + 1).padStart(2, '0')} / 09</span>
+  <div class="pc-icon">
+    <ProductIcon slug={slug} size={28} />
+  </div>
+  <h3 class="pc-name">{info.name}</h3>
+  <p class="pc-desc">{info.desc}</p>
+  <div class="pc-foot">
+    <span>{t('cta.explore')}</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      {lang === 'ar' ? <><line x1="4" y1="12" x2="20" y2="12"/><polyline points="10 6 4 12 10 18"/></> : <><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></>}
+    </svg>
+  </div>
+</a>
+
+<style>
+  .product-card {
+    display: flex; flex-direction: column; gap: 0;
+    position: relative; height: 100%;
+    min-height: 260px;
+    background: white;
+    border: 1px solid var(--gray-line);
+    padding: 28px;
+    color: var(--charcoal);
+  }
+  .pc-index {
+    position: absolute; top: 14px;
+    inset-inline-end: 16px;
+    font-size: 10px; color: var(--gray-soft); letter-spacing: 0.12em;
+  }
+  .pc-icon {
+    width: 56px; height: 56px;
+    background: var(--gray-light);
+    display: grid; place-items: center;
+    border: 1px solid var(--gray-line);
+    color: var(--navy);
+    margin-bottom: 28px;
+  }
+  .pc-name { margin: 0; font-size: 22px; font-weight: 600; color: var(--charcoal); line-height: 1.2; }
+  .pc-desc { margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: var(--gray-medium); flex: 1; }
+  .pc-foot {
+    margin-top: 24px; padding-top: 16px;
+    border-top: 1px solid var(--gray-line);
+    display: flex; align-items: center; justify-content: space-between;
+    color: var(--navy); font-size: 13px; font-weight: 500;
+  }
+</style>

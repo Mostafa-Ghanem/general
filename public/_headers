@@ -1,0 +1,19 @@
+# Cloudflare Pages — security & cache headers
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Long-cache hashed assets (Astro emits hashed filenames under /_astro/)
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Long-cache images
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Short-cache HTML so updates roll out quickly
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

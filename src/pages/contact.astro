@@ -1,0 +1,170 @@
+---
+// src/pages/contact.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import SectionLabel from '../components/ui/SectionLabel.astro';
+import CornerMarks from '../components/ui/CornerMarks.astro';
+import { getLangFromUrl, useTranslations, WHATSAPP_URL, PHONE_TEL } from '../i18n/utils';
+import { branches } from '../i18n/ui';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<BaseLayout title={t('contact.title').replace(/\n/g, ' ')} description={t('contactCta.lede')}>
+  <PageHero
+    coord={lang === 'ar' ? '— تواصل معانا' : '— CONTACT'}
+    eyebrow={t('contact.eyebrow')}
+    title={t('contact.title')}
+  />
+
+  <section class="contact-body">
+    <div class="container-grid">
+      <div class="contact-cards">
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener" class="ccard ccard-accent">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.5 12a8.5 8.5 0 0 1-12.7 7.4L3.5 21l1.6-4.2A8.5 8.5 0 1 1 20.5 12z"/></svg>
+          <span class="mono ccard-label">{lang === 'ar' ? 'واتساب — الأسرع' : 'WhatsApp — fastest'}</span>
+          <span class="ccard-val">+20 10 1626 5762</span>
+          <span class="ccard-action">{lang === 'ar' ? 'ابدأ المحادثة' : 'Start chat'} →</span>
+        </a>
+        <a href={PHONE_TEL} class="ccard">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3h4l2 5-3 2c1 2 3 4 5 5l2-3 5 2v4c0 1-1 2-2 2C9 20 4 15 4 5c0-1 1-2 1-2z"/></svg>
+          <span class="mono ccard-label">{lang === 'ar' ? 'اتصال مباشر' : 'Direct call'}</span>
+          <span class="ccard-val">+20 10 1626 5762</span>
+          <span class="ccard-action">{lang === 'ar' ? 'اتصل الآن' : 'Call now'} →</span>
+        </a>
+        <a href="mailto:sales@generalea.com" class="ccard">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14"/><polyline points="3,5 12,13 21,5"/></svg>
+          <span class="mono ccard-label">{lang === 'ar' ? 'بريد إلكتروني' : 'Email'}</span>
+          <span class="mono ccard-val">sales@generalea.com</span>
+          <span class="ccard-action">{lang === 'ar' ? 'أرسل بريداً' : 'Send email'} →</span>
+        </a>
+      </div>
+
+      <div class="contact-row">
+        <div class="hours-card tech-dots">
+          <CornerMarks color="var(--amber)" />
+          <h3 class="mono hours-label">{t('contact.hoursTitle')}</h3>
+          <div class="hours-days">{lang === 'ar' ? 'السبت — الخميس' : 'Saturday — Thursday'}</div>
+          <div class="mono hours-time">9:00 — 18:00</div>
+          <p class="hours-note">
+            {lang === 'ar'
+              ? 'الواتساب متاح على مدار ٢٤ ساعة. الرد على طلبات عروض الأسعار خلال ساعتين عمل.'
+              : 'WhatsApp available 24/7. Quote requests answered within 2 business hours.'}
+          </p>
+        </div>
+
+        <div class="map-card placeholder-img">
+          <span class="ph-label">MAP — 10TH OF RAMADAN, INDUSTRIAL ZONE A4</span>
+          <svg viewBox="0 0 600 320" preserveAspectRatio="none" class="map-svg">
+            <defs>
+              <pattern id="streetgrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="40" y2="0" stroke="rgba(26,43,74,0.08)" stroke-width="0.5"/>
+                <line x1="0" y1="0" x2="0" y2="40" stroke="rgba(26,43,74,0.08)" stroke-width="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#streetgrid)"/>
+            <line x1="0" y1="120" x2="600" y2="120" stroke="rgba(26,43,74,0.15)" stroke-width="2"/>
+            <line x1="240" y1="0" x2="240" y2="320" stroke="rgba(26,43,74,0.15)" stroke-width="2"/>
+            <line x1="0" y1="220" x2="600" y2="220" stroke="rgba(26,43,74,0.15)" stroke-width="2"/>
+            <line x1="420" y1="0" x2="420" y2="320" stroke="rgba(26,43,74,0.15)" stroke-width="2"/>
+            <g transform="translate(300, 160)">
+              <circle r="22" fill="var(--amber)" opacity="0.2"/>
+              <circle r="12" fill="var(--amber)"/>
+              <circle r="4" fill="white"/>
+            </g>
+            <text x="332" y="166" fill="var(--navy)" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">GFE — 10TH OF RAMADAN</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="branches-section">
+        <SectionLabel coord={lang === 'ar' ? '— الفروع' : '— BRANCHES'} eyebrow={t('contact.branchesTitle')} />
+        <h2 class="display-sm">{lang === 'ar' ? 'ثلاثة فروع — على بُعد مكالمة.' : 'Three branches — one call away.'}</h2>
+
+        <div class="branch-grid">
+          {branches[lang].map((b, i) => (
+            <div class="branch-cell">
+              <span class="mono branch-num">/ {String(i + 1).padStart(2, '0')}</span>
+              <h3 class="branch-name">{b.n}</h3>
+              <p class="branch-addr">{b.a}</p>
+              <div class="branch-phone-row">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3h4l2 5-3 2c1 2 3 4 5 5l2-3 5 2v4c0 1-1 2-2 2C9 20 4 15 4 5c0-1 1-2 1-2z"/></svg>
+                <span class="mono branch-phone">{b.p}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-body { background: white; padding: 0 0 120px; }
+  .contact-cards {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 0; border: 1px solid var(--gray-line);
+  }
+  .ccard {
+    padding: 40px; background: white; color: var(--charcoal);
+    display: flex; flex-direction: column;
+    border-inline-start: 1px solid var(--gray-line);
+    transition: background 0.15s;
+  }
+  .ccard:first-child { border-inline-start: none; }
+  .ccard-accent { background: var(--amber); color: var(--navy-deep); }
+  .ccard-label {
+    margin-top: 24px; font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gray-medium); font-weight: 500;
+  }
+  .ccard-accent .ccard-label { color: rgba(15,27,48,0.65); }
+  .ccard-val { margin-top: 12px; font-size: 24px; font-weight: 600; }
+  .ccard-action {
+    margin-top: auto; padding-top: 32px; font-size: 14px; font-weight: 500;
+    color: var(--navy);
+  }
+  .ccard-accent .ccard-action { color: var(--navy-deep); }
+
+  .contact-row {
+    margin-top: 24px; display: grid; grid-template-columns: 1fr 2fr; gap: 24px;
+  }
+  .hours-card {
+    background: var(--navy); color: white; padding: 40px;
+    position: relative;
+  }
+  .hours-label { margin: 0; font-size: 11px; letter-spacing: 0.14em; color: var(--amber); text-transform: uppercase; }
+  .hours-days { margin-top: 24px; font-size: 24px; font-weight: 600; line-height: 1.3; }
+  .hours-time { margin-top: 8px; font-size: 18px; color: var(--amber); }
+  .hours-note { margin-top: 28px; font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+  .map-card { position: relative; min-height: 320px; }
+  .map-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .branches-section { margin-top: 80px; }
+  .branch-grid {
+    margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border: 1px solid var(--gray-line);
+  }
+  .branch-cell { padding: 32px; border-inline-start: 1px solid var(--gray-line); }
+  .branch-cell:first-child { border-inline-start: none; }
+  .branch-num { font-size: 11px; letter-spacing: 0.14em; color: var(--amber); text-transform: uppercase; }
+  .branch-name { margin: 16px 0 12px; font-size: 18px; font-weight: 600; color: var(--charcoal); }
+  .branch-addr { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gray-medium); }
+  .branch-phone-row {
+    margin-top: 20px; padding-top: 16px;
+    border-top: 1px solid var(--gray-line);
+    display: flex; align-items: center; gap: 8px;
+    color: var(--navy);
+  }
+  .branch-phone { font-size: 13px; }
+
+  @media (max-width: 960px) {
+    .contact-cards { grid-template-columns: 1fr; }
+    .ccard { border-inline-start: none; border-top: 1px solid var(--gray-line); }
+    .ccard:first-child { border-top: none; }
+    .contact-row { grid-template-columns: 1fr; }
+    .branch-grid { grid-template-columns: 1fr; }
+    .branch-cell { border-inline-start: none; border-top: 1px solid var(--gray-line); }
+    .branch-cell:first-child { border-top: none; }
+  }
+</style>

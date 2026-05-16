@@ -1,0 +1,33 @@
+---
+// src/components/ui/PageHero.astro
+import SectionLabel from './SectionLabel.astro';
+import CornerMarks from './CornerMarks.astro';
+
+interface Props {
+  coord: string;
+  eyebrow: string;
+  title: string;
+  lede?: string;
+}
+const { coord, eyebrow, title, lede } = Astro.props;
+---
+<section class="page-hero tech-grid">
+  <CornerMarks color="rgba(255,255,255,0.18)" />
+  <div class="container-grid">
+    <SectionLabel coord={coord} eyebrow={eyebrow} dark />
+    <h1 class="display-lg page-hero-title">{title}</h1>
+    {lede && <p class="page-hero-lede">{lede}</p>}
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    background: var(--navy); color: white;
+    padding: 100px 0 80px; position: relative;
+  }
+  .page-hero-title { margin: 0; color: white; white-space: pre-line; text-wrap: balance; }
+  .page-hero-lede {
+    margin-top: 28px; font-size: 18px; line-height: 1.55;
+    color: rgba(255,255,255,0.7); max-width: 640px;
+  }
+</style>

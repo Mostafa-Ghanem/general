@@ -1,0 +1,163 @@
+---
+// src/components/layout/Header.astro
+import { getLangFromUrl, useTranslations, getLocalizedPath, getRouteFromUrl, getAlternatePath } from '../../i18n/utils';
+import type { Lang } from '../../i18n/ui';
+import Logo from '../ui/Logo.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const activeRoute = getRouteFromUrl(Astro.url);
+
+const items: Array<{ id: 'home' | 'about' | 'products' | 'projects' | 'contact'; routeKey: 'home' | 'about' | 'services' | 'projects' | 'contact'; label: string }> = [
+  { id: 'home',     routeKey: 'home',     label: t('nav.home') },
+  { id: 'about',    routeKey: 'about',    label: t('nav.about') },
+  { id: 'products', routeKey: 'services', label: t('nav.products') },
+  { id: 'projects', routeKey: 'projects', label: t('nav.projects') },
+  { id: 'contact',  routeKey: 'contact',  label: t('nav.contact') },
+];
+
+const otherLang: Lang = lang === 'ar' ? 'en' : 'ar';
+const altPath = getAlternatePath(Astro.url, otherLang);
+const contactHref = getLocalizedPath('contact', lang);
+
+const phone = t('footer.phone');
+const email = t('footer.email');
+---
+<header class="site-header sticky top-0 z-50">
+  {/* Utility bar */}
+  <div class="util-bar text-xs">
+    <div class="container-grid flex items-center justify-between gap-4 py-2">
+      <span class="mono tracking-widest opacity-80">
+        {lang === 'ar' ? 'موردون صناعيون منذ ١٩٩٨' : 'Industrial suppliers since 1998'}
+      </span>
+      <div class="util-bar-right flex items-center gap-5">
+        <a href={`tel:${phone.replace(/\s/g, '')}`} class="inline-flex items-center gap-1.5 opacity-80 hover:opacity-100">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3h4l2 5-3 2c1 2 3 4 5 5l2-3 5 2v4c0 1-1 2-2 2C9 20 4 15 4 5c0-1 1-2 1-2z"/></svg>
+          <span>{phone}</span>
+        </a>
+        <a href={`mailto:${email}`} class="latin inline-flex items-center gap-1.5 opacity-80 hover:opacity-100">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14"/><polyline points="3,5 12,13 21,5"/></svg>
+          <span>{email}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {/* Main bar */}
+  <div class="main-bar">
+    <div class="container-grid flex items-center justify-between gap-8 py-5">
+      <a href={getLocalizedPath('home', lang)} aria-label={t('site.company')}>
+        <Logo />
+      </a>
+
+      <nav class="desktop-nav flex items-center gap-8">
+        {items.map(it => {
+          const href = getLocalizedPath(it.routeKey, lang);
+          const isActive = activeRoute === it.routeKey;
+          return <a href={href} class:list={['nav-link', isActive && 'active']}>{it.label}</a>;
+        })}
+      </nav>
+
+      <div class="flex items-center gap-4">
+        {/* lang switcher */}
+        <div class="lang-switch">
+          {(['ar', 'en'] as Lang[]).map(l => {
+            const isActive = l === lang;
+            const href = l === lang ? '#' : getAlternatePath(Astro.url, l);
+            return (
+              <a href={href} class:list={['lang-btn', isActive && 'active']} aria-current={isActive ? 'true' : undefined}>
+                {l.toUpperCase()}
+              </a>
+            );
+          })}
+        </div>
+
+        <a href={contactHref} class="btn btn-primary desktop-cta">
+          {t('cta.requestQuote')}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            {lang === 'ar' ? <><line x1="4" y1="12" x2="20" y2="12"/><polyline points="10 6 4 12 10 18"/></> : <><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></>}
+          </svg>
+        </a>
+
+        <button id="mobile-toggle" class="mobile-toggle" aria-label="Menu" aria-expanded="false">
+          <svg class="icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+          <svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+        </button>
+      </div>
+    </div>
+
+    {/* Mobile menu */}
+    <div id="mobile-menu" class="mobile-menu" hidden>
+      <div class="container-grid py-6">
+        <div class="flex flex-col">
+          {items.map((it, i) => {
+            const href = getLocalizedPath(it.routeKey, lang);
+            const isActive = activeRoute === it.routeKey;
+            return (
+              <a href={href} class:list={['mobile-link', isActive && 'active']}>
+                <span class="mono mobile-link-num">{String(i + 1).padStart(2, '0')}</span>
+                <span>{it.label}</span>
+              </a>
+            );
+          })}
+        </div>
+        <a href={contactHref} class="btn btn-primary mobile-cta">{t('cta.requestQuote')}</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header { background: var(--navy); color: white; }
+  .util-bar { background: var(--navy-deep); color: rgba(255,255,255,0.65); }
+  .desktop-nav a { color: rgba(255,255,255,0.85); }
+  .lang-switch { display: inline-flex; border: 1px solid rgba(255,255,255,0.18); border-radius: 2px; overflow: hidden; }
+  .lang-btn {
+    padding: 8px 12px; font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.7); font-weight: 600;
+    transition: background 0.15s, color 0.15s;
+  }
+  .lang-btn.active { background: var(--amber); color: var(--navy-deep); }
+
+  .mobile-toggle { color: white; background: transparent; border: none; padding: 6px; display: none; }
+  .mobile-toggle .icon-close { display: none; }
+  .mobile-toggle[aria-expanded="true"] .icon-menu { display: none; }
+  .mobile-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+  .mobile-menu {
+    background: var(--navy); border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .mobile-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0; font-size: 18px; color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .mobile-link.active { color: var(--amber); }
+  .mobile-link-num { font-size: 11px; opacity: 0.5; min-width: 24px; }
+  .mobile-cta { margin-top: 24px; width: 100%; justify-content: center; }
+
+  @media (max-width: 960px) {
+    .desktop-nav, .desktop-cta, .util-bar-right { display: none !important; }
+    .mobile-toggle { display: inline-flex !important; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const btn = document.getElementById('mobile-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      if (open) {
+        menu.setAttribute('hidden', '');
+        document.body.style.overflow = '';
+      } else {
+        menu.removeAttribute('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,19 @@
+---
+// src/pages/index.astro — English homepage
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import ProductGrid from '../components/sections/ProductGrid.astro';
+import WhyUs from '../components/sections/WhyUs.astro';
+import ProjectsTeaser from '../components/sections/ProjectsTeaser.astro';
+import ContactCTA from '../components/sections/ContactCTA.astro';
+---
+<BaseLayout
+  title="Industrial supplier — flanges, pipes, valves"
+  description="Egypt's industrial supplier since 1998. Flanges, pipes, hydraulic fittings, valves and gaskets in stock for factories nationwide."
+>
+  <Hero />
+  <ProductGrid />
+  <WhyUs />
+  <ProjectsTeaser />
+  <ContactCTA />
+</BaseLayout>

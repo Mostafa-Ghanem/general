@@ -1,0 +1,53 @@
+---
+// src/pages/ar/services/index.astro
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import ProductGrid from '../../../components/sections/ProductGrid.astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<BaseLayout title={t('nav.products')} description={t('products.lede')}>
+  <PageHero
+    coord="— الكتالوج"
+    eyebrow={t('products.eyebrow')}
+    title={t('products.title')}
+    lede={t('products.lede')}
+  />
+  <ProductGrid withHeader={false} />
+
+  <section class="cat-stats-section">
+    <div class="container-grid">
+      <div class="cat-stats">
+        <div class="stat">
+          <div class="stat-v">٩,٥٠٠+</div>
+          <div class="mono stat-l">كود منتج</div>
+        </div>
+        <div class="stat">
+          <div class="stat-v">24"</div>
+          <div class="mono stat-l">أكبر قطر متوفر</div>
+        </div>
+        <div class="stat">
+          <div class="stat-v mono">ASTM·DIN·BS</div>
+          <div class="mono stat-l">معايير معتمدة</div>
+        </div>
+        <div class="stat">
+          <div class="stat-v">٢٤ ساعة</div>
+          <div class="mono stat-l">تجهيز الطلب</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cat-stats-section { background: white; padding: 0 0 120px; }
+  .cat-stats {
+    padding: 40px 0; border-top: 1px solid var(--gray-line); border-bottom: 1px solid var(--gray-line);
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+  }
+  .stat-v { font-size: 28px; font-weight: 600; color: var(--navy); letter-spacing: -0.01em; }
+  .stat-l { margin-top: 8px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-medium); }
+  @media (max-width: 640px) { .cat-stats { grid-template-columns: 1fr 1fr; } }
+</style>
