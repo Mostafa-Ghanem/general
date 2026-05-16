@@ -8,7 +8,6 @@ const products = defineCollection({
   type: 'content',
   schema: ({ image }) =>
     z.object({
-      slug: z.string(),
       lang: z.enum(['en', 'ar']),
       name: z.string(),
       shortDesc: z.string(),
@@ -36,7 +35,6 @@ const projects = defineCollection({
   type: 'content',
   schema: ({ image }) =>
     z.object({
-      slug: z.string(),
       lang: z.enum(['en', 'ar']),
       title: z.string(),
       summary: z.string(),
